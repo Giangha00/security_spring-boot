@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: head('Hồ sơ cá nhân')}"></head>
+
+<body class="bg-light">
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1 class="h3 mb-4">Hồ sơ cá nhân</h1>
+
+                <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                <div th:if="${param.totpDisabled}" class="alert alert-info">Đã tắt xác thực 2 bước.</div>
+
+                <form th:action="@{/profile}" method="post" class="card card-body mb-3" th:if="${user != null}">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input class="form-control" th:value="${user.username}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input class="form-control" th:value="${user.email}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Họ và tên</label>
+                        <input id="fullName" name="fullName" class="form-control" th:value="${user.fullName}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                </form>
+
+                <a th:href="@{/}" class="btn btn-outline-secondary">Về trang chủ</a>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

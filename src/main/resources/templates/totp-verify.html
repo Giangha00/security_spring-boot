@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: head('Xác thực 2 bước')}"></head>
+
+<body class="bg-light">
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <h1 class="h3 mb-4 text-center">Xác thực 2 bước</h1>
+
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                <form th:action="@{/2fa/verify}" method="post" class="card card-body">
+                    <div class="mb-3">
+                        <label for="code" class="form-label">Nhập mã TOTP 6 chữ số hoặc mã khôi phục</label>
+                        <input id="code" name="code" class="form-control" autocomplete="one-time-code" required
+                            autofocus>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Xác nhận</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

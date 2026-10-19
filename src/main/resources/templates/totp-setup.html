@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: head('Thiết lập xác thực 2 bước (TOTP)')}"></head>
+
+<body class="bg-light">
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1 class="h3 mb-4">Thiết lập xác thực 2 bước (TOTP)</h1>
+
+                <div th:if="${mandatory}" class="alert alert-warning">
+                    Vai trò LECTURER và ADMIN bắt buộc phải kích hoạt xác thực 2 bước trước khi sử dụng hệ thống.
+                </div>
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                <div th:if="${recoveryCodes}" class="card card-body mb-4 border-success">
+                    <h2 class="h5 text-success">Đã bật xác thực 2 bước thành công!</h2>
+                    <p class="small text-secondary">Vui lòng lưu lại 10 mã khôi phục dùng một lần dưới đây ở nơi an
+                        toàn:</p>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item font-monospace" th:each="rc : ${recoveryCodes}" th:text="${rc}"></li>
+                    </ul>
+                    <a th:href="@{/}" class="btn btn-primary">Tiếp tục vào trang chủ</a>
+                </div>
+
+                <div th:if="${recoveryCodes == null}" class="card card-body mb-4">
+                    <p>Quét mã QR bằng ứng dụng Google Authenticator / Microsoft Authenticator:</p>
+                    <div class="text-center my-3" th:if="${qrDataUri}">
+                        <img th:src="${qrDataUri}" alt="TOTP QR Code" class="img-thumbnail">
+                    </div>
+                    <p class="small text-muted">Khóa bí mật Base32: <code th:text="${secret}"></code></p>
+
+                    <form th:action="@{/2fa/setup}" method="post">
+                        <input type="hidden" name="secret" th:value="${secret}">
+                        <div class="mb-3">
+                            <label for="code" class="form-label">Mã TOTP 6 chữ số</label>
+                            <input id="code" name="code" class="form-control" maxlength="6" required autofocus>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Kích hoạt 2FA</button>
+                    </form>
+                </div>
+
+                <div th:if="${totpEnabled and !mandatory}" class="card card-body mb-4">
+                    <h2 class="h6">Tắt xác thực 2 bước</h2>
+                    <form th:action="@{/2fa/disable}" method="post">
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Nhập mật khẩu hiện tại để xác nhận</label>
+                            <input id="currentPassword" name="currentPassword" type="password" class="form-control"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-outline-danger">Tắt 2FA</button>
+                    </form>
+                </div>
+
+                <a th:href="@{/}" class="btn btn-outline-secondary">Về trang chủ</a>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

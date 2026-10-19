@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: head('Quản trị tài khoản')}"></head>
+
+<body class="bg-light">
+    <main class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">Quản trị tài khoản</h1>
+            <div>
+                <a th:href="@{/admin/audit-logs}" class="btn btn-outline-dark me-2">Nhật ký kiểm toán</a>
+                <a th:href="@{/}" class="btn btn-outline-secondary">Về trang chủ</a>
+            </div>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <div th:if="${param.invited}" class="alert alert-success">Đã tạo tài khoản và gửi email mời đặt mật khẩu.</div>
+        <div th:if="${param.statusChanged}" class="alert alert-success">Đã cập nhật trạng thái tài khoản.</div>
+        <div th:if="${param.rolesUpdated}" class="alert alert-success">Đã cập nhật vai trò tài khoản.</div>
+        <div th:if="${param.forcedLogout}" class="alert alert-info">Đã buộc đăng xuất tài khoản khỏi mọi thiết bị.</div>
+
+        <div class="card card-body mb-4">
+            <h2 class="h5 mb-3">Mời Giảng viên / Quản trị viên mới</h2>
+            <form th:action="@{/admin/users/invite}" method="post" class="row g-2">
+                <div class="col-md-3">
+                    <input name="username" class="form-control" placeholder="Username" required>
+                </div>
+                <div class="col-md-3">
+                    <input name="email" type="email" class="form-control" placeholder="Email" required>
+                </div>
+                <div class="col-md-3">
+                    <input name="fullName" class="form-control" placeholder="Họ và tên">
+                </div>
+                <div class="col-md-2">
+                    <select name="role" class="form-select">
+                        <option value="ROLE_LECTURER">LECTURER</option>
+                        <option value="ROLE_ADMIN">ADMIN</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-success w-100">Mời</button>
+                </div>
+            </form>
+        </div>
+
+        <form th:action="@{/admin/users}" method="get" class="row g-2 mb-4">
+            <div class="col-md-4">
+                <input name="keyword" class="form-control" placeholder="Tìm theo email hoặc username..."
+                    th:value="${keyword}">
+            </div>
+            <div class="col-md-3">
+                <select name="role" class="form-select">
+                    <option value="">-- Mọi vai trò --</option>
+                    <option value="ROLE_STUDENT" th:selected="${selectedRole == 'ROLE_STUDENT'}">ROLE_STUDENT</option>
+                    <option value="ROLE_LECTURER" th:selected="${selectedRole == 'ROLE_LECTURER'}">ROLE_LECTURER
+                    </option>
+                    <option value="ROLE_ADMIN" th:selected="${selectedRole == 'ROLE_ADMIN'}">ROLE_ADMIN</option>
+                    <option value="ROLE_USER" th:selected="${selectedRole == 'ROLE_USER'}">ROLE_USER</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">-- Mọi trạng thái --</option>
+                    <option th:each="st : ${statuses}" th:value="${st}" th:text="${st}"
+                        th:selected="${st == selectedStatus}"></option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Lọc</button>
+            </div>
+        </form>
+
+        <div class="card card-body">
+            <table class="table table-striped align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Trạng thái</th>
+                        <th>Vai trò</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="u : ${userPage.content}">
+                        <td th:text="${u.id}"></td>
+                        <td th:text="${u.username}"></td>
+                        <td th:text="${u.email}"></td>
+                        <td><span class="badge bg-secondary" th:text="${u.status}"></span></td>
+                        <td>
+                            <span th:each="r : ${u.roles}" class="badge bg-info text-dark me-1"
+                                th:text="${r.name}"></span>
+                        </td>
+                        <td class="d-flex flex-wrap gap-1">
+                            <form th:action="@{/admin/users/{id}/status(id=${u.id})}" method="post" class="d-inline">
+                                <input type="hidden" name="status" value="LOCKED">
+                                <button type="submit" class="btn btn-sm btn-outline-warning">Khóa</button>
+                            </form>
+                            <form th:action="@{/admin/users/{id}/status(id=${u.id})}" method="post" class="d-inline">
+                                <input type="hidden" name="status" value="ACTIVE">
+                                <button type="submit" class="btn btn-sm btn-outline-success">Mở khóa / Kích
+                                    hoạt</button>
+                            </form>
+                            <form th:action="@{/admin/users/{id}/status(id=${u.id})}" method="post" class="d-inline">
+                                <input type="hidden" name="status" value="DISABLED">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Vô hiệu hóa</button>
+                            </form>
+                            <form th:action="@{/admin/users/{id}/force-logout(id=${u.id})}" method="post"
+                                class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-dark">Buộc đăng xuất</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+
+</html>

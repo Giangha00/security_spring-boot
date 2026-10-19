@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments :: head('Trang chủ')}"></head>
+
+<body class="bg-light">
+    <main class="container py-5">
+        <h1 class="h3">Xin chào, <span sec:authentication="name">user</span>!</h1>
+        <p class="text-secondary">Vai trò: <span sec:authentication="principal.authorities">[ROLE_USER]</span></p>
+
+        <div class="d-flex flex-wrap gap-2 my-4">
+            <a th:href="@{/profile}" class="btn btn-outline-primary">Hồ sơ cá nhân</a>
+            <a th:href="@{/password/change}" class="btn btn-outline-primary">Đổi mật khẩu</a>
+            <a th:href="@{/sessions}" class="btn btn-outline-primary">Thiết bị đăng nhập</a>
+            <a th:href="@{/2fa/setup}" class="btn btn-outline-primary">Xác thực 2 bước (TOTP)</a>
+            <a sec:authorize="hasAnyRole('LECTURER', 'ADMIN')" th:href="@{/lecturer/students}" class="btn btn-info">Danh
+                sách học viên</a>
+        </div>
+
+        <p sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin}" class="btn btn-warning">Vào khu quản trị</a>
+            <a th:href="@{/admin/audit-logs}" class="btn btn-outline-dark ms-2">Nhật ký kiểm toán</a>
+        </p>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-outline-secondary">Đăng xuất</button>
+        </form>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: head('Danh sách học viên')}"></head>
+
+<body class="bg-light">
+    <main class="container py-5">
+        <h1 class="h3 mb-4">Danh sách học viên (Chỉ đọc)</h1>
+
+        <form th:action="@{/lecturer/students}" method="get" class="row g-2 mb-4">
+            <div class="col-md-6">
+                <input name="keyword" class="form-control" placeholder="Tìm theo username hoặc email..."
+                    th:value="${keyword}">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            </div>
+        </form>
+
+        <div class="card card-body mb-4">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Họ tên</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="s : ${studentPage.content}">
+                        <td th:text="${s.id}"></td>
+                        <td th:text="${s.username}"></td>
+                        <td th:text="${s.email}"></td>
+                        <td th:text="${s.fullName}"></td>
+                        <td th:text="${s.status}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <a th:href="@{/}" class="btn btn-outline-secondary">Về trang chủ</a>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: head('Thiết bị đăng nhập')}"></head>
+
+<body class="bg-light">
+    <main class="container py-5">
+        <h1 class="h3 mb-4">Thiết bị đăng nhập</h1>
+
+        <div th:if="${param.revoked}" class="alert alert-success">Đã đăng xuất từ xa phiên được chọn.</div>
+
+        <div class="card card-body mb-4">
+            <table class="table table-striped align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Thời điểm đăng nhập</th>
+                        <th>Hoạt động cuối</th>
+                        <th>Địa chỉ IP</th>
+                        <th>Trình duyệt (User-Agent)</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="s : ${sessions}">
+                        <td th:text="${s.createdAt}"></td>
+                        <td th:text="${s.lastAccessedAt}"></td>
+                        <td th:text="${s.ipAddress}"></td>
+                        <td th:text="${s.userAgent}"></td>
+                        <td>
+                            <span th:if="${s.sessionId == currentSessionId}" class="badge bg-success me-2">Phiên hiện
+                                tại</span>
+                            <form th:action="@{/sessions/{id}/revoke(id=${s.id})}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Đăng xuất từ xa</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <a th:href="@{/}" class="btn btn-outline-secondary">Về trang chủ</a>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments :: head('Đăng nhập')}"></head>
+
+<body class="bg-light">
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <h1 class="h3 mb-4 text-center">Đăng nhập</h1>
+
+                <div th:if="${param.error}" class="alert alert-danger">Sai username hoặc mật khẩu, hoặc tài khoản chưa
+                    thể đăng nhập.</div>
+                <div th:if="${param.logout}" class="alert alert-success">Bạn đã đăng xuất.</div>
+                <div th:if="${param.expired}" class="alert alert-warning">Phiên đăng nhập đã hết hiệu lực hoặc bị thu
+                    hồi.</div>
+                <div th:if="${param.registered}" class="alert alert-info">Đăng ký thành công! Vui lòng kiểm tra email để
+                    xác minh tài khoản trước khi đăng nhập.</div>
+                <div th:if="${param.verified}" class="alert alert-success">Xác minh email thành công! Bạn có thể đăng
+                    nhập ngay bây giờ.</div>
+                <div th:if="${param.resent}" class="alert alert-info">Đã gửi lại email xác minh tài khoản.</div>
+                <div th:if="${param.resetSuccess}" class="alert alert-success">Đặt lại mật khẩu thành công. Vui lòng
+                    đăng nhập lại.</div>
+                <div th:if="${param.invitedActivated}" class="alert alert-success">Kích hoạt tài khoản thành công! Vui
+                    lòng đăng nhập.</div>
+                <div th:if="${verificationError}" class="alert alert-danger" th:text="${verificationError}"></div>
+
+                <form th:action="@{/login}" method="post" class="card card-body">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username hoặc Email</label>
+                        <input id="username" name="username" class="form-control" autocomplete="username" required
+                            autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mật khẩu</label>
+                        <input id="password" name="password" type="password" class="form-control"
+                            autocomplete="current-password" required>
+                    </div>
+                    <div class="mb-3 form-check d-flex justify-content-between align-items-center">
+                        <div>
+                            <input id="remember-me" name="remember-me" type="checkbox" class="form-check-input">
+                            <label for="remember-me" class="form-check-label">Ghi nhớ đăng nhập (14 ngày)</label>
+                        </div>
+                        <a th:href="@{/password/forgot}" class="small text-decoration-none">Quên mật khẩu?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+                </form>
+
+                <p class="text-center mt-3">Chưa có tài khoản? <a th:href="@{/registration}">Đăng ký</a></p>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
